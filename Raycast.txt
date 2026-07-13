@@ -1,0 +1,124 @@
+//----- Variables -----------------------------------------------------------------------------------------------------
+
+dir = 90
+distance = 3.45458530788
+height = 584.12904284471
+scanlines = 80
+x-pos = 243
+
+
+
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    FOV = 70;
+    Motion.SetRotationStyle(don't rotate);
+    Looks.SwitchCostumeTo(BIG);
+    Looks.SetSizeTo(1);
+    Looks.SwitchCostumeTo(hitbox);
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(raycast)
+{
+    Motion.GoTo(Player);
+    Pen.Clear();
+    Call Raycast;
+}
+
+
+//----- Custom blocks -------------------------------------------------------------------------------------------------
+
+Define Draw  at x(string x) dist(string dist) tpye(string type) (warp=true)
+{
+    Repeat Until (DRAW DIST[(DRAW IDX - 1)] > dist)
+    {
+        DRAW IDX += -1;
+    }
+    Repeat Until (DRAW DIST[DRAW IDX] < dist)
+    {
+        DRAW IDX += 1;
+    }
+    List.InsertItem(DRAW DIST, DRAW IDX, dist);
+    List.InsertItem(DRAW X, DRAW IDX, x);
+    List.InsertItem(DRAW TYPE, DRAW IDX, type);
+}
+
+Define Fast Ray (warp=true)
+{
+    Forever
+    {
+        If (Not (Sensing.TouchingObject(Thick Map)))
+        {
+            Motion.Move(8);
+            Repeat Until Sensing.TouchingObject(Thick Map)
+            {
+                Motion.Move(7);
+            }
+            Motion.Move(-9);
+        }
+        Repeat (16)
+        {
+            Motion.Move(1);
+            If Sensing.TouchingObject(Map)
+            {
+                Stop(this script);
+            }
+        }
+    }
+}
+
+Define Raycast (warp=true)
+{
+    dir = CAM DIRECTION;
+    x-pos = ((RES / 2) - 240);
+    If (RES < 5)
+    {
+        x-pos = Operator.Round(x-pos);
+    }
+    scanlines = (480 / RES);
+    Repeat (scanlines)
+    {
+        Motion.PointInDirection((CAM DIRECTION + atan((x-pos / DV))));
+        Call Single Ray;
+        x-pos += RES;
+    }
+}
+
+Define Single Ray (warp=true)
+{
+    Pen.SetPenSizeTo((RES + 1));
+    Motion.GoTo(Player);
+    Pen.SetPenTo(brightness, (100 - (distance / 1.4)));
+    Call Fast Ray;
+    Repeat Until (Not (Sensing.TouchingObject(Map)))
+    {
+        Motion.Move(-0.4);
+    }
+    distance = (Sensing.DistanceTo(Player) * cos((Motion.Direction() - CAM DIRECTION)));
+    height = ((DV * 11) / (distance + 3));
+    texture offset = (((Motion.XPosition() + Motion.YPosition()) / 27.5) % 1);
+    texture offset = (texture offset * 32);
+    If Sensing.TouchingObject(Edges)
+    {
+        Call Draw  at x(x-pos) dist(distance) tpye((texture offset + 3000001));
+    }
+    Else
+    {
+        Call Draw  at x(x-pos) dist(distance) tpye((texture offset + 1000001));
+    }
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+BIG.svg
+hitbox.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+pop.wav

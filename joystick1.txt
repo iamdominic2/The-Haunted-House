@@ -1,0 +1,77 @@
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Looks.Show();
+    Looks.SetEffectTo(GHOST, 50);
+    Costume.GoToFrontBack(back);
+    Motion.GoToXY(190, -90);
+    Looks.SwitchCostumeTo(costume2);
+    Control.CreateCloneOf(_myself_);
+    Looks.SwitchCostumeTo(costume1);
+}
+
+
+//----- Key pressed events --------------------------------------------------------------------------------------------
+
+WhenKeyPressed(any)
+{
+    Looks.Hide();
+    Control.DeleteThisClone();
+}
+
+
+//----- Start as clone ------------------------------------------------------------------------------------------------
+
+Control.WhenIStartAsClone()
+{
+    Costume.MoveLayers(forward, 1);
+    Looks.SetSizeTo(90);
+    Forever
+    {
+        Motion.GoTo(joystick1);
+        RIGHT/LEFT = 0;
+        UP/DOWN = 0;
+        If (Sensing.TouchingObject(_mouse_) And Sensing.MouseDown())
+        {
+            Repeat Until (Not (Sensing.MouseDown()))
+            {
+                Motion.GoTo(_mouse_);
+                Motion.PointTowards(joystick1);
+                If (Sensing.DistanceTo(joystick1) > 30)
+                {
+                    Motion.Move((Sensing.DistanceTo(joystick1) - 30));
+                }
+                RIGHT/LEFT = 0;
+                If (Motion.XPosition() < 175)
+                {
+                    RIGHT/LEFT = -1;
+                }
+                If (Motion.XPosition() > 205)
+                {
+                    RIGHT/LEFT = 1;
+                }
+                UP/DOWN = 0;
+                If (Motion.YPosition() < -105)
+                {
+                    UP/DOWN = -1;
+                }
+                If (Motion.YPosition() > -75)
+                {
+                    UP/DOWN = 1;
+                }
+            }
+        }
+    }
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+costume1.svg
+costume2.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+pop.wav

@@ -1,0 +1,75 @@
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Looks.Show();
+    Looks.SetSizeTo(80);
+    Looks.SetEffectTo(GHOST, 50);
+    Costume.GoToFrontBack(back);
+    Motion.GoToXY(-170, -90);
+    Looks.SwitchCostumeTo(costume2);
+    Control.CreateCloneOf(_myself_);
+    Looks.SwitchCostumeTo(costume1);
+}
+
+WhenGreenFlagClicked()
+{
+    SIDESTEP LEFT/RIGHT = 0;
+    RIGHT/LEFT = 0;
+    UP/DOWN = 0;
+}
+
+
+//----- Key pressed events --------------------------------------------------------------------------------------------
+
+WhenKeyPressed(any)
+{
+    Looks.Hide();
+    Control.DeleteThisClone();
+}
+
+
+//----- Start as clone ------------------------------------------------------------------------------------------------
+
+Control.WhenIStartAsClone()
+{
+    Costume.MoveLayers(forward, 1);
+    Looks.SetSizeTo(90);
+    Forever
+    {
+        Motion.GoToXY(-170, -90);
+        SIDESTEP LEFT/RIGHT = 0;
+        If (Sensing.TouchingObject(_mouse_) And Sensing.MouseDown())
+        {
+            Repeat Until (Not (Sensing.MouseDown()))
+            {
+                Motion.SetX(Sensing.MouseX());
+                Motion.PointTowards(joystick2);
+                If (Sensing.DistanceTo(joystick2) > 35)
+                {
+                    Motion.Move((Sensing.DistanceTo(joystick2) - 35));
+                }
+                SIDESTEP LEFT/RIGHT = 0;
+                If (Motion.XPosition() < -185)
+                {
+                    SIDESTEP LEFT/RIGHT = -1;
+                }
+                If (Motion.XPosition() > -155)
+                {
+                    SIDESTEP LEFT/RIGHT = 1;
+                }
+            }
+        }
+    }
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+costume1.svg
+costume2.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+pop.wav

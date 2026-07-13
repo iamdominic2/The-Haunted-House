@@ -1,0 +1,65 @@
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Looks.SwitchCostumeTo(a);
+    Motion.GoToXY(0, 0);
+    Looks.SetSizeTo(100);
+    Control.Wait(0.6);
+    Repeat (15)
+    {
+        Costume.GoToFrontBack(front);
+        Looks.ChangeEffectBy(GHOST, 7);
+    }
+    Looks.SwitchCostumeTo(hurt);
+    Forever
+    {
+        Costume.GoToFrontBack(front);
+        If (HEALTH > 0)
+        {
+            Looks.ChangeEffectBy(GHOST, 5);
+        }
+        Else
+        {
+            Sound.Play(Lose);
+            Looks.SwitchCostumeTo(Died);
+            Looks.ClearGraphicEffects();
+            Looks.SetSizeTo(0);
+            Forever
+            {
+                Looks.SetSizeTo(((Looks.Size() + 10) / 1.095));
+            }
+        }
+    }
+}
+
+
+//----- When greater than events --------------------------------------------------------------------------------------
+
+WhenGreaterThan(TIMER, 0.01)
+{
+    Looks.SwitchCostumeTo(Annotation);
+    Looks.SetSizeTo(100);
+    Costume.GoToFrontBack(front);
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(knockback)
+{
+    Looks.SwitchCostumeTo(hurt);
+    Looks.SetEffectTo(GHOST, 30);
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+a.png
+Died.svg
+hurt.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+Lose.wav

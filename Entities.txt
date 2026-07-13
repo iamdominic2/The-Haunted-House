@@ -1,0 +1,246 @@
+//----- Variables -----------------------------------------------------------------------------------------------------
+
+ord = -57.409888033089
+type = 
+vx = -13
+vy = 52
+Widdlex = 0
+
+
+
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Sensing.SetDragMode(not draggable);
+    Looks.SetSizeTo(250);
+    Call Spawn(7) of(1);
+    Looks.SetSizeTo(400);
+    Call Spawn(3) of(2);
+    Looks.SetSizeTo(300);
+    Call Spawn(2) of(6);
+    Motion.GoToXY(-28, 13);
+    Repeat (10)
+    {
+        DELTA = 0;
+    }
+    Looks.Hide();
+    Forever
+    {
+        Repeat (500)
+;
+        Looks.SetSizeTo(250);
+        Call Spawn(1) of(1);
+        Looks.SetSizeTo(400);
+        Call Spawn(1) of(2);
+        Repeat (490)
+;
+        Looks.SetSizeTo(250);
+        Call Spawn(1) of(1);
+        Repeat (400)
+;
+        Looks.SetSizeTo(250);
+        Call Spawn(2) of(1);
+        Looks.SetSizeTo(400);
+        Call Spawn(1) of(2);
+        Repeat (490)
+;
+        Looks.SetSizeTo(250);
+        Call Spawn(1) of(1);
+        Call Spawn(1) of(6);
+    }
+}
+
+WhenGreenFlagClicked()
+{
+    HEALTH = 50;
+    texture size = 32;
+}
+
+WhenGreenFlagClicked()
+{
+    Forever
+    {
+        HURT += -2;
+    }
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(object tick)
+{
+    vx = (Motion.XPosition() - Sensing.Of(x position, Player));
+    vy = (Motion.YPosition() - Sensing.Of(y position, Player));
+    Call Rotate view(vx)(vy);
+}
+
+
+//----- Start as clone ------------------------------------------------------------------------------------------------
+
+Control.WhenIStartAsClone()
+{
+    Forever
+    {
+        If (HEALTH > 0)
+        {
+            Looks.Show();
+            Motion.PointTowards(Player);
+            Motion.ChangeXBy((sin(Motion.Direction()) * ((DELTA / 4.5) * (((FRAME / 999) + 3) - type[type]))));
+            If ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities)) And (Not (Operator.Contains(2, type))))
+            {
+                Motion.ChangeXBy((-1 * (sin(Motion.Direction()) * ((DELTA / 4) * (((FRAME / 999) + 3) - type[type])))));
+            }
+            Motion.ChangeYBy((cos(Motion.Direction()) * ((DELTA / 4.5) * (((FRAME / 999) + 3) - type[type]))));
+            If ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities)) And (Not (Operator.Contains(2, type))))
+            {
+                Motion.ChangeYBy((-1 * (cos(Motion.Direction()) * ((DELTA / 4) * (((FRAME / 999) + 3) - type[type])))));
+            }
+            If Sensing.TouchingObject(Player)
+            {
+                If (GHOST == 2)
+                {
+                    Looks.Hide();
+                }
+                ord = Motion.Direction();
+                Motion.PointTowards(Player);
+                KNOCK DIR = Motion.Direction();
+                Event.Broadcast("knockback");
+                Sound.Play(boom 1);
+                Sound.Play(Operator.Random(2 , 3));
+                HURT = 32;
+                Motion.PointInDirection(ord);
+                Repeat (3)
+                {
+                    HEALTH += ((-0.6 - (type * 0.4)) * 2.3);
+                }
+                Repeat (10)
+                {
+                    Motion.ChangeXBy((-8 * (sin(Motion.Direction()) * ((DELTA / 6) * (3.2 - type[type])))));
+                    Motion.ChangeYBy((-8 * (cos(Motion.Direction()) * ((DELTA / 6) * (3.2 - type[type])))));
+                    If (Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities))
+                    {
+                        If (Not ((type == 2)))
+                        {
+                            Repeat Until (Not ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities))))
+                            {
+                                Motion.ChangeXBy((sin(Motion.Direction()) * ((DELTA / 6) * (3.2 - type[type]))));
+                                Motion.ChangeYBy((1 * (cos(Motion.Direction()) * ((DELTA / 6) * (3.2 - type[type])))));
+                            }
+                        }
+                    }
+                }
+            }
+            If (GHOST == 2)
+            {
+                Looks.Hide();
+            }
+            Looks.ClearGraphicEffects();
+            If (type == 2)
+            {
+                Looks.SetEffectTo(COLOR, 150);
+            }
+            Else
+            {
+                If (type == 6)
+                {
+                    Looks.SetEffectTo(COLOR, 75);
+                    Looks.SetEffectTo(BRIGHTNESS, -25);
+                }
+                Else
+                {
+                    Looks.SetEffectTo(COLOR, 125);
+                    Looks.SetEffectTo(BRIGHTNESS, -25);
+                }
+            }
+            Repeat Until ((Not ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities)))) Or (type == 2))
+            {
+                Call widdleout;
+            }
+        }
+    }
+}
+
+
+//----- Custom blocks -------------------------------------------------------------------------------------------------
+
+Define Draw at x(string x) dist(string dist) type(string type) (warp=true)
+{
+    Repeat Until (DRAW DIST[(DRAW IDX - 1)] > dist)
+    {
+        DRAW IDX += -1;
+    }
+    Repeat Until (DRAW DIST[DRAW IDX] < dist)
+    {
+        DRAW IDX += 1;
+    }
+    List.InsertItem(DRAW DIST, DRAW IDX, dist);
+    List.InsertItem(DRAW X, DRAW IDX, x);
+    List.InsertItem(DRAW TYPE, DRAW IDX, type);
+}
+
+Define Rotate view(string x)(string y) (warp=true)
+{
+    vx = ((x * cos(CAM DIRECTION)) - (y * sin(CAM DIRECTION)));
+    vy = ((x * sin(CAM DIRECTION)) + (y * cos(CAM DIRECTION)));
+    If (vy > 0)
+    {
+        Call Draw at x((vx * (DV / vy))) dist(vy) type(type);
+    }
+}
+
+Define Spawn(string count) of(string type) (warp=true)
+{
+    Looks.Show();
+    Looks.SetEffectTo(GHOST, 100);
+    type = type;
+    Repeat (count)
+    {
+        Motion.GoTo(_random_);
+        Repeat Until ((Not ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities)))) And (Sensing.DistanceTo(Player) > 55))
+        {
+            Motion.GoTo(_random_);
+        }
+        Control.CreateCloneOf(_myself_);
+    }
+    type = "";
+}
+
+Define widdleout (warp=true)
+{
+    Widdlex = 1;
+    Repeat (35)
+    {
+        Repeat (8)
+        {
+            Motion.TurnRight(45);
+            Motion.Move(Widdlex);
+            If (Not ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities))))
+            {
+                Stop(this script);
+            }
+            Else
+            {
+                Motion.Move((0 - Widdlex));
+            }
+        }
+        Widdlex += 1;
+    }
+}
+
+
+//----- Orphaned blocks -----------------------------------------------------------------------------------------------
+
+Motion.GoTo(joystick1);
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+box.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+boom 1.wav
+Scream1.wav
+Scream2.wav

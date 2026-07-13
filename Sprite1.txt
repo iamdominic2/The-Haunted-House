@@ -1,0 +1,77 @@
+//----- Variables -----------------------------------------------------------------------------------------------------
+
+cloneid = 10
+
+
+
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Motion.GoToXY(-190, -165);
+    Control.Wait(0.5);
+    Call Clones;
+    Forever
+    {
+        If (HEALTH < 0)
+        {
+            Costume.GoToFrontBack(front);
+        }
+    }
+}
+
+
+//----- Start as clone ------------------------------------------------------------------------------------------------
+
+Control.WhenIStartAsClone()
+{
+    Costume.MoveLayers(backward, 2);
+    Forever
+    {
+        Looks.SwitchCostumeTo(Operator.Join("costume", Operator.LetterOf(Score, cloneid)));
+        Costume.MoveLayers(forward, 1);
+        If (HEALTH < 0)
+        {
+            Costume.GoToFrontBack(front);
+        }
+    }
+}
+
+
+//----- Custom blocks -------------------------------------------------------------------------------------------------
+
+Define Clones (warp=true)
+{
+    Looks.Show();
+    cloneid = 0;
+    Repeat (10)
+    {
+        cloneid += 1;
+        Motion.ChangeXBy(15);
+        Control.CreateCloneOf(_myself_);
+        Control.Wait(0);
+    }
+    Motion.SetX(-205);
+    Looks.SwitchCostumeTo(costume1s);
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+costume.svg
+costume0.svg
+costume1.svg
+costume1s.svg
+costume2.svg
+costume3.svg
+costume4.svg
+costume5.svg
+costume6.svg
+costume7.svg
+costume8.svg
+costume9.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+pop.wav

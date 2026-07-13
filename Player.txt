@@ -1,0 +1,184 @@
+//----- Variables -----------------------------------------------------------------------------------------------------
+
+Widdlex = 12
+
+
+
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Motion.GoToXY(-80, 0);
+    Looks.SetSizeTo(150);
+    Motion.PointInDirection(90);
+    Forever
+    {
+        Repeat (40)
+        {
+            If (HEALTH > 0)
+            {
+                PLAYER SPEED = (DELTA * 4);
+                Call Raycast Intialise;
+                Call Player Tick;
+                Event.Broadcast("raycast");
+                Event.Broadcast("object tick");
+                Event.Broadcast("paint");
+            }
+        }
+        If (HEALTH > 0)
+        {
+            Score += 1;
+        }
+    }
+}
+
+WhenGreenFlagClicked()
+{
+    Forever
+    {
+        Looks.SetEffectTo(GHOST, (GHOST * 50));
+    }
+}
+
+WhenGreenFlagClicked()
+{
+    KNOCK DIR = "n";
+    lines = 0;
+    Looks.SetSizeTo(400);
+}
+
+
+//----- Key pressed events --------------------------------------------------------------------------------------------
+
+WhenKeyPressed(l)
+{
+    lines = (1 - lines);
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(knockback)
+{
+    Repeat (6)
+    {
+        Call try move((3 * sin(KNOCK DIR)))(0);
+        Call try move(0)((3 * cos(KNOCK DIR)));
+    }
+    KNOCK DIR = "n";
+}
+
+
+//----- Custom blocks -------------------------------------------------------------------------------------------------
+
+Define move(string step) (warp=false)
+{
+    Motion.SetRotationStyle(don't rotate);
+    Looks.SwitchCostumeTo(hitbox);
+    Call try move((step * sin(Motion.Direction())))(0);
+    Call try move(0)((step * cos(Motion.Direction())));
+    Motion.SetRotationStyle(all around);
+    Looks.SwitchCostumeTo(player);
+}
+
+Define Player Tick (warp=true)
+{
+    If (KNOCK DIR == "n")
+    {
+        If (Sensing.KeyPressed(left arrow) Or (RIGHT/LEFT == -1))
+        {
+            Motion.TurnLeft(((PLAYER SPEED + 5) * 0.3));
+        }
+        If (Sensing.KeyPressed(right arrow) Or (RIGHT/LEFT == 1))
+        {
+            Motion.TurnRight(((PLAYER SPEED + 5) * 0.3));
+        }
+        If ((Sensing.KeyPressed(up arrow) Or Sensing.KeyPressed(w)) Or (UP/DOWN == 1))
+        {
+            Call move(((PLAYER SPEED + 5) / 6));
+        }
+        If ((Sensing.KeyPressed(down arrow) Or Sensing.KeyPressed(s)) Or (UP/DOWN == -1))
+        {
+            Call move((0 - ((PLAYER SPEED + 5) / 6)));
+        }
+        If (Sensing.KeyPressed(a) Or (SIDESTEP LEFT/RIGHT == -1))
+        {
+            Motion.TurnLeft(90);
+            Call move(((PLAYER SPEED + 5) / 7));
+            Motion.TurnRight(90);
+        }
+        If (Sensing.KeyPressed(d) Or (SIDESTEP LEFT/RIGHT == 1))
+        {
+            Motion.TurnRight(90);
+            Call move(((PLAYER SPEED + 5) / 7));
+            Motion.TurnLeft(90);
+        }
+    }
+    HEALTH += ((HEALTH < 50) * (DELTA / 55));
+}
+
+Define Raycast Intialise (warp=true)
+{
+    CAM DIRECTION = Motion.Direction();
+    DV = (240 / tan((FOV / 2)));
+    List.DeleteAll(DRAW X);
+    List.DeleteAll(DRAW DIST);
+    List.DeleteAll(DRAW TYPE);
+    List.Add(DRAW DIST, 100000);
+    List.Add(DRAW X, "");
+    List.Add(DRAW TYPE, 77);
+    DRAW IDX = 2;
+}
+
+Define try move(string x)(string y) (warp=true)
+{
+    Motion.ChangeXBy(x);
+    Motion.ChangeYBy(y);
+    stuck = 0;
+    If Sensing.TouchingObject(Map)
+    {
+        Repeat Until ((Not (Sensing.TouchingObject(Map))) Or (stuck > 222))
+        {
+            Motion.ChangeXBy((( - x) / 10));
+            Motion.ChangeYBy((( - y) / 10));
+            stuck += 1;
+        }
+        If (stuck > 222)
+        {
+            Call widdleout;
+        }
+    }
+}
+
+Define widdleout (warp=true)
+{
+    Widdlex = 1;
+    Repeat (35)
+    {
+        Repeat (8)
+        {
+            Motion.TurnRight(45);
+            Motion.Move(Widdlex);
+            If (Not (Sensing.TouchingObject(Map)))
+            {
+                Stop(this script);
+            }
+            Else
+            {
+                Motion.Move((0 - Widdlex));
+            }
+        }
+        Widdlex += 1;
+    }
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+hitbox.svg
+player.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+pop.wav

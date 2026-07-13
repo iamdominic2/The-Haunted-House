@@ -1,0 +1,150 @@
+//----- Variables -----------------------------------------------------------------------------------------------------
+
+type = 
+vx = -101
+vy = 95
+
+
+
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    Looks.SetSizeTo(200);
+    Call Spawn(20) of(3);
+    Call Spawn(3) of(4);
+    Call Spawn(2) of(5);
+}
+
+WhenGreenFlagClicked()
+{
+    HEALTH = 50;
+}
+
+WhenGreenFlagClicked()
+{
+    Score = 0;
+    Forever
+    {
+        If (HURT > 1)
+        {
+            HURT += -2;
+        }
+    }
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(object tick)
+{
+    vx = (Motion.XPosition() - Sensing.Of(x position, Player));
+    vy = (Motion.YPosition() - Sensing.Of(y position, Player));
+    Call Rotate view(vx)(vy);
+}
+
+
+//----- Start as clone ------------------------------------------------------------------------------------------------
+
+Control.WhenIStartAsClone()
+{
+    Forever
+    {
+        Looks.Show();
+        Looks.ClearGraphicEffects();
+        Looks.SetEffectTo(COLOR, (type * 25));
+        If (GHOST == 2)
+        {
+            Looks.SetEffectTo(GHOST, 100);
+        }
+        If Sensing.TouchingObject(Player)
+        {
+            If (type == 3)
+            {
+                Sound.Play(Coin);
+            }
+            Motion.GoTo(_random_);
+            Repeat Until ((Not ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities)))) And (Sensing.DistanceTo(Player) > 55))
+            {
+                Motion.GoTo(_random_);
+            }
+            Score += Points[type];
+            If (type > 3)
+            {
+                If (type == 4)
+                {
+                    Sound.Play(Collect);
+                }
+                Else
+                {
+                    Sound.Play(Start);
+                    Repeat (7)
+                    {
+                        HEALTH += 3;
+                        If (HEALTH > 50)
+                        {
+                            HEALTH = 50;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+//----- Custom blocks -------------------------------------------------------------------------------------------------
+
+Define Draw at x(string x) dist(string dist) type(string type) (warp=true)
+{
+    Repeat Until (DRAW DIST[(DRAW IDX - 1)] > dist)
+    {
+        DRAW IDX += -1;
+    }
+    Repeat Until (DRAW DIST[DRAW IDX] < dist)
+    {
+        DRAW IDX += 1;
+    }
+    List.InsertItem(DRAW DIST, DRAW IDX, dist);
+    List.InsertItem(DRAW X, DRAW IDX, x);
+    List.InsertItem(DRAW TYPE, DRAW IDX, type);
+}
+
+Define Rotate view(string x)(string y) (warp=true)
+{
+    vx = ((x * cos(CAM DIRECTION)) - (y * sin(CAM DIRECTION)));
+    vy = ((x * sin(CAM DIRECTION)) + (y * cos(CAM DIRECTION)));
+    If (vy > 0)
+    {
+        Call Draw at x((vx * (DV / vy))) dist(vy) type(type);
+    }
+}
+
+Define Spawn(string count) of(string type) (warp=true)
+{
+    Looks.Show();
+    Looks.SetEffectTo(GHOST, 100);
+    type = type;
+    Repeat (count)
+    {
+        Motion.GoTo(_random_);
+        Repeat Until ((Not ((Sensing.TouchingObject(Map) Or Sensing.TouchingObject(Entities)))) And (Sensing.DistanceTo(Player) > 55))
+        {
+            Motion.GoTo(_random_);
+        }
+        Control.CreateCloneOf(_myself_);
+    }
+    type = "";
+}
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+box.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+Coin.wav
+Collect.wav
+Start.wav

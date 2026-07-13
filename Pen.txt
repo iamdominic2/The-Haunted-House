@@ -1,0 +1,186 @@
+//----- Variables -----------------------------------------------------------------------------------------------------
+
+distance = 3.1524938676
+gametick = 11
+height = 2983.942959605
+type = 3000005.5546663
+x-pos = 189
+
+
+
+//----- Green flag events ---------------------------------------------------------------------------------------------
+
+WhenGreenFlagClicked()
+{
+    HURT = 0;
+    static = 0;
+    gametick = 0;
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(paint)
+{
+    gametick += 1;
+    Pen.Clear();
+    Looks.SwitchCostumeTo(null);
+    Call Draw!;
+    Looks.Hide();
+    Looks.SwitchCostumeTo(big);
+    Call R汙;
+    Pen.Clear();
+    Call Health Bar;
+}
+
+
+//----- Custom blocks -------------------------------------------------------------------------------------------------
+
+Define Draw! (warp=true)
+{
+    Pen.Clear();
+    Pen.Clear();
+    Row number = 0;
+    Pen.SetPenSizeTo((RES + 1));
+    Repeat (List.Length(DRAW X))
+    {
+        Row number += 1;
+        If (abs(DRAW X[Row number]) < 270)
+        {
+            Call Draw Row;
+        }
+    }
+}
+
+Define Draw (IGNORE TYPE) at x(string x) dist(string dist) (warp=true)
+{
+    List.Add(DRAW DIST, dist);
+    List.Add(DRAW X, x);
+}
+
+Define Draw Row (warp=true)
+{
+    Pen.Clear();
+    x-pos = DRAW X[Row number];
+    distance = DRAW DIST[Row number];
+    type = DRAW TYPE[Row number];
+    height = (10 * (DV / distance));
+    If (type < 10)
+    {
+        Call Entitie Stamp;
+        Stop(this script);
+    }
+    Pen.SetPenTo(brightness, (120 - (distance / 1.4)));
+    Pen.SetPenTo(color, type);
+    Pen.Clear();
+    height = ((height * 2.75) - RES);
+    dy = (0 - (height / texture size));
+    scan idxx = (Operator.Round(type) % 1000000);
+    Pen.SetPenTo(transparency, 0);
+    Motion.GoToXY(x-pos, (dy * -16));
+    Pen.Down();
+    Repeat (texture size)
+    {
+        Pen.SetPenTo(color, ((SCAN[scan idxx] / 499990) + (60 + ((type > 2900099) * 6.9))));
+        scan idxx += 1;
+        Motion.ChangeYBy(dy);
+        Pen.SetPenTo(brightness, (100 - (distance / 2)));
+    }
+    Pen.Clear();
+}
+
+Define Entitie Stamp (warp=false)
+{
+    Pen.Clear();
+    Looks.ClearGraphicEffects();
+    Looks.SwitchCostumeTo(null);
+    If (type < 7)
+    {
+        Looks.SwitchCostumeTo(type);
+    }
+    Looks.SetEffectTo(BRIGHTNESS, ((35 - (distance / 1.5)) * (1 - (distance < 57.5))));
+    If (type == 4)
+    {
+        Looks.SetEffectTo(COLOR, 75);
+    }
+    Motion.GoToXY(x-pos, 0);
+    Looks.SetSizeTo((height / 2));
+    If (Not ((type == "")))
+    {
+        Pen.Stamp();
+    }
+}
+
+Define Health Bar (warp=false)
+{
+    Pen.Clear();
+    If (HEALTH > 50)
+    {
+        HEALTH = 50;
+    }
+    Motion.GoToXY(-225, -145);
+    Pen.SetPenColorToColor(#5a5a5a);
+    Pen.SetPenSizeTo(16);
+    Pen.Down();
+    Motion.ChangeXBy(450);
+    Pen.Clear();
+    Motion.ChangeXBy(-450);
+    If (HEALTH > 0)
+    {
+        Pen.SetPenColorToColor(#bf0d0d);
+        Pen.SetPenTo(color, (HEALTH / 1.25));
+        Pen.SetPenSizeTo(13);
+        Pen.Down();
+        Motion.ChangeXBy((HEALTH * 9));
+        Pen.Clear();
+    }
+}
+
+Define R汙 (warp=true)
+{
+    Framerule 3 = ((gametick % 3) + 178);
+    If (lines == 0)
+    {
+        Pen.SetPenColorToColor(#000000);
+        Pen.SetPenSizeTo(1);
+        Repeat (121)
+        {
+            Motion.GoToXY(-240, Framerule 3);
+            Pen.Down();
+            Motion.GoToXY(240, Framerule 3);
+            Framerule 3 += -3;
+        }
+        Pen.Clear();
+        Repeat (Operator.Random(0 , Operator.Random(1 , 5)))
+        {
+            Pen.SetPenColorToColor(#0004e4);
+            Pen.SetPenTo(color, Operator.Random(0 , 100));
+            Motion.GoTo(_random_);
+            Pen.SetPenSizeTo(Operator.Random(0 , 3));
+            Pen.Down();
+            Pen.Clear();
+        }
+    }
+}
+
+
+//----- Orphaned blocks -----------------------------------------------------------------------------------------------
+
+Motion.PointTowards(joystick1);
+
+
+//----- Costumes ------------------------------------------------------------------------------------------------------
+
+48-488314_png-file-svg-candy-svg (1).png
+48-488314_png-file-svg-candy-svg (1)2.png
+48-488314_png-file-svg-candy-svg (1)3.png
+Bat-a.svg
+big.svg
+Ghost-c.svg
+null.svg
+zombie.svg
+
+
+//----- Sounds --------------------------------------------------------------------------------------------------------
+
+pop.wav
