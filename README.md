@@ -10,7 +10,12 @@ A first-person arcade-style stealth game where you're trapped inside a mansion i
 
 ## Objective
 
-Grab candies for points and rack up extra score the longer you stay alive.
+Grab candies for points and rack up extra score the longer you stay alive. <br>Orange candies give 5 points while green candies give 20 points!<br>Medkits recover your HP.<br>
+
+## Enemies
+Bats: Fast. <br>
+Zombies: Powerful <br>
+Ghosts: Phase through walls
 
 ## Controls
 
