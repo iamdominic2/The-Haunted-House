@@ -1,14 +1,14 @@
 //----- Variables -----------------------------------------------------------------------------------------------------
 
 type = 
-vx = -60
-vy = 69
+vx = 79
+vy = 86
 
 
 
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Looks.SetSizeTo(200);
     Call Spawn(20) of(3);
@@ -16,12 +16,7 @@ WhenGreenFlagClicked()
     Call Spawn(2) of(5);
 }
 
-WhenGreenFlagClicked()
-{
-    HEALTH = 50;
-}
-
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Score = 0;
     Forever
@@ -33,8 +28,16 @@ WhenGreenFlagClicked()
     }
 }
 
+WhenBroadcastReceived(gamestart)
+{
+    HEALTH = 50;
+}
 
-//----- Broadcast received events -------------------------------------------------------------------------------------
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
+}
 
 WhenBroadcastReceived(object tick)
 {

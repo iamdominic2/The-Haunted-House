@@ -1,12 +1,18 @@
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Motion.GoToXY(0, 0);
     Forever
     {
         Looks.SetEffectTo(GHOST, 100);
     }
+}
+
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
 }
 
 

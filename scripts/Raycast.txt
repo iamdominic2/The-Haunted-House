@@ -8,9 +8,9 @@ x-pos = 243
 
 
 
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     FOV = 70;
     Motion.SetRotationStyle(don't rotate);
@@ -19,8 +19,11 @@ WhenGreenFlagClicked()
     Looks.SwitchCostumeTo(hitbox);
 }
 
-
-//----- Broadcast received events -------------------------------------------------------------------------------------
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
+}
 
 WhenBroadcastReceived(raycast)
 {

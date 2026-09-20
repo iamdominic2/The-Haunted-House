@@ -4,9 +4,9 @@ Widdlex = 12
 
 
 
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Motion.GoToXY(-80, 0);
     Looks.SetSizeTo(150);
@@ -32,7 +32,14 @@ WhenGreenFlagClicked()
     }
 }
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
+{
+    KNOCK DIR = "n";
+    lines = 0;
+    Looks.SetSizeTo(400);
+}
+
+WhenBroadcastReceived(gamestart)
 {
     Forever
     {
@@ -40,23 +47,11 @@ WhenGreenFlagClicked()
     }
 }
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(killc)
 {
-    KNOCK DIR = "n";
-    lines = 0;
-    Looks.SetSizeTo(400);
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
 }
-
-
-//----- Key pressed events --------------------------------------------------------------------------------------------
-
-WhenKeyPressed(l)
-{
-    lines = (1 - lines);
-}
-
-
-//----- Broadcast received events -------------------------------------------------------------------------------------
 
 WhenBroadcastReceived(knockback)
 {

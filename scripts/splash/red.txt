@@ -2,6 +2,34 @@
 
 WhenGreenFlagClicked()
 {
+    Event.Broadcast("gamestart");
+}
+
+
+//----- Sprite clicked events -----------------------------------------------------------------------------------------
+
+WhenThisSpriteClicked()
+{
+    Event.BroadcastAndWait("killc");
+    Stop(other scripts in sprite);
+    Event.Broadcast("gamestart");
+}
+
+
+//----- When greater than events --------------------------------------------------------------------------------------
+
+WhenGreaterThan(TIMER, 0.01)
+{
+    Looks.SwitchCostumeTo(Annotation);
+    Looks.SetSizeTo(100);
+    Costume.GoToFrontBack(front);
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(gamestart)
+{
     Looks.SwitchCostumeTo(a);
     Motion.GoToXY(0, 0);
     Looks.SetSizeTo(100);
@@ -28,23 +56,16 @@ WhenGreenFlagClicked()
             Forever
             {
                 Looks.SetSizeTo(((Looks.Size() + 10) / 1.095));
+                If Sensing.KeyPressed(r)
+                {
+                    Event.BroadcastAndWait("killc");
+                    Event.Broadcast("gamestart");
+                    Stop(this script);
+                }
             }
         }
     }
 }
-
-
-//----- When greater than events --------------------------------------------------------------------------------------
-
-WhenGreaterThan(TIMER, 0.01)
-{
-    Looks.SwitchCostumeTo(Annotation);
-    Looks.SetSizeTo(100);
-    Costume.GoToFrontBack(front);
-}
-
-
-//----- Broadcast received events -------------------------------------------------------------------------------------
 
 WhenBroadcastReceived(knockback)
 {

@@ -4,9 +4,9 @@ cloneid = 10
 
 
 
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Motion.GoToXY(-190, -165);
     Control.Wait(0.5);
@@ -18,6 +18,12 @@ WhenGreenFlagClicked()
             Costume.GoToFrontBack(front);
         }
     }
+}
+
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
 }
 
 

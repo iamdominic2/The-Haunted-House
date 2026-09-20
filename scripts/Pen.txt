@@ -1,24 +1,27 @@
 //----- Variables -----------------------------------------------------------------------------------------------------
 
 distance = 3.1524938676
-gametick = 67
+gametick = 28
 height = 2983.942959605
 type = 3000005.5546663
 x-pos = 189
 
 
 
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     HURT = 0;
     static = 0;
     gametick = 0;
 }
 
-
-//----- Broadcast received events -------------------------------------------------------------------------------------
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
+}
 
 WhenBroadcastReceived(paint)
 {

@@ -8,9 +8,9 @@ Widdlex = 0
 
 
 
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Broadcast received events -------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Sensing.SetDragMode(not draggable);
     Looks.SetSizeTo(250);
@@ -51,13 +51,13 @@ WhenGreenFlagClicked()
     }
 }
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     HEALTH = 50;
     texture size = 32;
 }
 
-WhenGreenFlagClicked()
+WhenBroadcastReceived(gamestart)
 {
     Forever
     {
@@ -65,8 +65,17 @@ WhenGreenFlagClicked()
     }
 }
 
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
+}
 
-//----- Broadcast received events -------------------------------------------------------------------------------------
+WhenBroadcastReceived(killc)
+{
+    Stop(other scripts in sprite);
+    Control.DeleteThisClone();
+}
 
 WhenBroadcastReceived(object tick)
 {

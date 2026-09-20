@@ -1,6 +1,15 @@
-//----- Green flag events ---------------------------------------------------------------------------------------------
+//----- Key pressed events --------------------------------------------------------------------------------------------
 
-WhenGreenFlagClicked()
+WhenKeyPressed(any)
+{
+    Looks.Hide();
+    Control.DeleteThisClone();
+}
+
+
+//----- Broadcast received events -------------------------------------------------------------------------------------
+
+WhenBroadcastReceived(gamestart)
 {
     Looks.Show();
     Looks.SetEffectTo(GHOST, 50);
@@ -11,12 +20,9 @@ WhenGreenFlagClicked()
     Looks.SwitchCostumeTo(costume1);
 }
 
-
-//----- Key pressed events --------------------------------------------------------------------------------------------
-
-WhenKeyPressed(any)
+WhenBroadcastReceived(killc)
 {
-    Looks.Hide();
+    Stop(other scripts in sprite);
     Control.DeleteThisClone();
 }
 

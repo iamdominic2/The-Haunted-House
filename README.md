@@ -12,9 +12,9 @@ A first-person arcade-style stealth game where you're trapped inside a mansion i
 
 Grab candies for points and rack up extra score the longer you stay alive. <br>Orange candies give 5 points while green candies give 20 points!<br>Medkits recover your HP.<br>
 
-## Enemies
+## The three enemies.
 Bats: Fast. <br>
-Zombies: Powerful <br>
+Zombies: Powerful. <br>
 Ghosts: Phase through walls
 
 ## Controls
@@ -23,3 +23,11 @@ Up and Down arrow keys: Move forward and backward! <Br>
 Left and Right arrow keys: Turn the camera around! <br>
 WASD: Sidestep! <br>
 Mobile touch controls are also supported! <br>
+
+## Updates
+1.01 Made you take more damage
+1.02 Changed the music
+1.03 Zombies!
+1.04 Mobile controls, left joystick is sidestep, the right joystick is moving around and turning. Pressing any key hides them.
+1.05 You can restart by clicking the game over screen, or pressing R, when you run out of health.
+1.06 New textured walls 
