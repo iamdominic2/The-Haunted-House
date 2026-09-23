@@ -25,9 +25,9 @@ WASD: Sidestep! <br>
 Mobile touch controls are also supported! <br>
 
 ## Updates
-1.01 Made you take more damage
-1.02 Changed the music
-1.03 Zombies!
-1.04 Mobile controls, left joystick is sidestep, the right joystick is moving around and turning. Pressing any key hides them.
-1.05 You can restart by clicking the game over screen, or pressing R, when you run out of health.
+1.01 Made you take more damage<BR>
+1.02 Changed the music<BR>
+1.03 Zombies!<BR>
+1.04 Mobile controls, left joystick is sidestep, the right joystick is moving around and turning. Pressing any key hides them.<BR>
+1.05 You can restart by clicking the game over screen, or pressing R, when you run out of health.<BR>
 1.06 New textured walls 
